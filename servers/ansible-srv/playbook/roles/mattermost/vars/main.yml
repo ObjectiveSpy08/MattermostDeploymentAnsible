@@ -1,0 +1,7 @@
+admin_email: sbhoyar_devops@zoho.com
+admin_username: admin
+linux_usergroup: mattermost
+linux_username: mattermost
+mattermost_download_url: https://releases.mattermost.com/5.7.1/mattermost-team-5.7.1-linux-amd64.tar.gz
+root_usergroup: root
+root_username: root

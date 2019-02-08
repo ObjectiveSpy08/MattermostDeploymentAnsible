@@ -1,0 +1,79 @@
+---
+- name: Check if the Mattermost config.json is already present.
+  stat: path=/opt/mattermost/config/config.json
+  register: mm_config_file
+
+- block:
+  - name: packages | Install Mattermost from tar archive.
+    unarchive: src={{mattermost_download_url}} dest=/opt/ copy=no
+ 
+  - name: Ensure group mattermost exists
+    group:
+      name: "{{linux_usergroup}}"
+      state: present
+
+  - name: Create Linux user.
+    user: name="{{linux_username}}" groups="{{linux_usergroup}}"
+
+  - name: Create mattermost/data directory
+    file: path=/opt/mattermost/{{ item }} state=directory mode=0755 owner="{{linux_username}}" group="{{linux_usergroup}}"
+    with_items:
+      - data
+      - config
+      - logs
+
+  - name: Change ownership for /opt/mattermost
+    file:
+      path: /opt/mattermost
+      owner: "{{linux_username}}"
+      group: "{{linux_usergroup}}"
+      mode: 0755
+
+  when: mm_config_file.stat.exists == False 
+  become: true
+
+- name: Move mattermost config file
+  template: src=templates/config.json dest=/opt/mattermost/config/config.json
+  become: true
+
+- name: Setup Mattermost to use systemd for starting and stopping.
+  template:
+    src: files/mattermost.service
+    dest: /etc/systemd/system/mattermost.service
+    owner: "{{root_username}}"
+    group: "{{root_usergroup}}"
+    mode: 0644
+  become: true
+
+- name: Make sure a service is running
+  systemd:
+    state: restarted
+    enabled: yes
+    name: mattermost
+  become: true
+
+- name: Find if admin user already created
+  command: /opt/mattermost/bin/mattermost user search {{admin_email}}
+  register: admin_user
+  become: true
+  
+- name: Create admin user if there isn't already one
+  command: /opt/mattermost/bin/mattermost user create --email {{admin_email}} --username {{admin_username}} --password {{admin_pwd}} --system_admin
+  no_log: true
+  become: true
+  when: admin_user.stderr_lines|length == 1
+
+- name: Find if a team has been created
+  command: /opt/mattermost/bin/mattermost team list
+  register: first_team
+  become: true
+
+- block:
+  - name: Create a team if there isn't one.
+    command: /opt/mattermost/bin/mattermost team create --name devops --display_name devops --private --email {{admin_email}}
+    become: true
+
+  - name: Add admin to the created team.
+    command: /opt/mattermost/bin/mattermost team add devops {{admin_email}} {{admin_username}}
+    become: true
+  when: first_team.stderr_lines|length == 0

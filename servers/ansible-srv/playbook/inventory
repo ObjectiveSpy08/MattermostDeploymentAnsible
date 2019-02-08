@@ -1,0 +1,5 @@
+[mattermost]
+192.168.33.100 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/keys/mattermost-srv_id_rsa 
+
+[mattermost:vars]
+ansible_python_interpreter=/usr/bin/python3

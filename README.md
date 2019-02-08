@@ -45,7 +45,8 @@ The functionality has been distributed into three roles respectively for each of
 * Admin username is **admin**. Password will be the value set for *admin_pwd*.
 * You can also signup as a new user as that has been enabled in the config.json.
 * The admin can then add the new user to a team and send them notifications.
+* Run `baker install-mm` again to verfiy that the playbook is idempotent and exisitng users and teams aren't deleted.
 
 ## Screencast
 
-* The screencast is available on [YouTube](#)
+* The screencast is available on [YouTube](https://www.youtube.com/watch?v=6P942wvwWE8&feature=youtu.be)

@@ -5,7 +5,7 @@
 
 ## Aim
 
-To idempotently automate the installation and configuration of a Mattermost server using Ansible.
+To idempotently automate the installation and configuration of a Mattermost server using Ansible and Baker.
 
 The code does the following: 
 
@@ -49,4 +49,4 @@ The functionality has been distributed into three roles respectively for each of
 
 ## Screencast
 
-* The screencast is available on [YouTube](https://www.youtube.com/watch?v=6P942wvwWE8&feature=youtu.be)
+* The screencast is available on [YouTube](https://youtu.be/hHFUzlqnN5E)

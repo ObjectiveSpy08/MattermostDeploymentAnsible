@@ -1,4 +1,4 @@
-# Submission HW2 - Devops
+# Submission HW2 - Devops CSC 519
 
 * Name: Shantanu Bhoyar
 * unity id: sbhoyar
